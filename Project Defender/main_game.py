@@ -128,10 +128,11 @@ while running:
     if bullet_state == "fire":
         fire_bullet(bulletX, bulletY)
         bulletY -= bulletY_change
-        if bulletX < enemyX:
-            bulletX += 0.5
-        elif bulletX > enemyX:
-            bulletX -= 0.5
+        if hit < 4:
+            if bulletX < enemyX:
+                bulletX += 0.5
+            elif bulletX > enemyX:
+                bulletX -= 0.5
 
     # Collision
     collision = isCollision(enemyX, enemyY, bulletX, bulletY)
