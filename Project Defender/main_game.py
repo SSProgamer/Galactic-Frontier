@@ -24,8 +24,6 @@ screenY = -600
 playerImg = pygame.image.load('Project Defender/spaceship.png')
 playerX = 370
 playerY = 480
-playerX_change = 0
-playerY_change = 0
 
 # Enemy
 enemyImg = pygame.image.load('Project Defender/ghost.png')
