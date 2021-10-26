@@ -24,7 +24,6 @@ screenY = -600
 playerImg = pygame.image.load('Project Defender/spaceship.png')
 playerX = 370
 playerY = 480
-player_speed = 0.5
 playerX_change = 0
 playerY_change = 0
 
@@ -75,6 +74,8 @@ while running:
     screenY += 0.1
     if screenY >= 0:
         screenY = -600
+    
+    pygame.mouse.set_visible(False)
 
     if bullet_state == "ready":
         bulletY = playerY
@@ -87,30 +88,19 @@ while running:
             mouse_press = pygame.mouse.get_pressed()
             if mouse_press[0]:
                 fire_bullet(bulletX, bulletY)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                playerX_change = -player_speed
-            if event.key == pygame.K_d:
-                playerX_change = player_speed
-            if event.key == pygame.K_w:
-                playerY_change = -player_speed
-            if event.key == pygame.K_s:
-                playerY_change = player_speed
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_a or event.key == pygame.K_d:
-                playerX_change = 0
-            if event.key == pygame.K_w or event.key == pygame.K_s:
-                playerY_change = 0
             if event.key == pygame.K_ESCAPE:
                 running = False
 
-    playerX += playerX_change
+    mouse_location = pygame.mouse.get_pos()
+    playerX = mouse_location[0] - 25
+    playerY = mouse_location[1] - 25
+
     enemyX += enemyX_change
     if playerX <= -5:
         playerX = -5
     elif playerX >= 740:
         playerX = 740
-    playerY += playerY_change
     if playerY <= 0:
         playerY = 0
     elif playerY >= 535:
@@ -136,7 +126,7 @@ while running:
 
     # Collision
     collision = isCollision(enemyX, enemyY, bulletX, bulletY)
-    if collision:
+    if collision and bullet_state == "fire":
         bullet_state = "ready"
         hit += 1
         
