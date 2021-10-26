@@ -5,7 +5,7 @@ pygame.init()
 # create screen
 screen = pygame.display.set_mode((800, 600))
 
-font = pygame.font.Font("Aquire-BW0ox.otf", 64)
+font = pygame.font.Font("projain/Aquire-BW0ox.otf", 64)
 textX = 10
 textY = 10
 
