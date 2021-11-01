@@ -39,11 +39,11 @@ enemy_state = []
 num_of_enemies = 6
 
 for i in range(num_of_enemies):
-    enemyImg.append(pygame.image.load('Project Defender/ghost.png'))
+    enemyImg.append(pygame.image.load('Project Defender/Assets/test.png'))
     enemyX.append((-100)-i*75)
-    enemyY.append(230)
-    enemyX_change.append(2)
-    enemyY_change.append(2)
+    enemyY.append(235)
+    enemyX_change.append(1)
+    enemyY_change.append(1)
     enemy_health.append(4)
     enemy_state.append(False)
 
@@ -108,9 +108,9 @@ while running:
             elif mouse_press[0] and player_state:
                 pygame.mouse.set_visible(True)
                 player_state = False
-                all_playerImg.append(pygame.image.load('Project Defender/spaceship.png'))
-                all_playerX.append(mouse_location[0])
-                all_playerY.append(mouse_location[1])
+                all_playerImg.append(pygame.image.load('Project Defender/Assets/test2.png'))
+                all_playerX.append(mouse_location[0]-15)
+                all_playerY.append(mouse_location[1]-15)
                 num_of_player += 1
                 playerX = 300
                 playerY = 550
@@ -119,17 +119,8 @@ while running:
                 running = False
 
     if player_state:
-        playerX = mouse_location[0] - 25
-        playerY = mouse_location[1] - 25
-
-    if playerX <= -5:
-        playerX = -5
-    elif playerX >= 740:
-        playerX = 740
-    if playerY <= 0:
-        playerY = 0
-    elif playerY >= 535:
-        playerY = 535
+        playerX = mouse_location[0]-30
+        playerY = mouse_location[1]-30
 
     while True in enemy_state:
         for i in range(num_of_enemies):
@@ -149,9 +140,9 @@ while running:
             enemyX[i] += enemyX_change[i]
         elif enemyY[i] < 350 and enemyX[i] < 557:
             enemyY[i] += enemyY_change[i]
-        elif enemyX[i] < 557:
+        elif enemyX[i] < 560:
             enemyX[i] += enemyX_change[i]
-        elif enemyY[i] > 250:
+        elif enemyY[i] > 249:
             enemyY[i] -= enemyY_change[i]
         else:
             enemyX[i] += enemyX_change[i]
