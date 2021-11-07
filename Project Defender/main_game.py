@@ -9,7 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600))
 
 # Background
-background = pygame.image.load('stage/Stage1_1.png')
+background = pygame.image.load('stage/stage01_2.png')
 
 # Title
 pygame.display.set_caption("Project Defender")
@@ -45,7 +45,7 @@ check_enemy_move = False
 for i in range(num_of_enemies):
     enemyImg.append(pygame.image.load('Project Defender/Assets/test.png'))
     enemyX.append((-100)-i*75)
-    enemyY.append(235)
+    enemyY.append(240)
     enemyX_change.append(1)
     enemyY_change.append(1)
     enemy_health.append(4)
@@ -163,13 +163,13 @@ while running:
     for i in range(num_of_enemies):
         # Enemy Movement
         if check_enemy_move:
-            if enemyX[i] < 150:
+            if enemyX[i] < 130:
                 enemyX[i] += enemyX_change[i]
-            elif enemyY[i] < 350 and enemyX[i] < 557:
+            elif enemyY[i] < 360 and enemyX[i] < 549:
                 enemyY[i] += enemyY_change[i]
-            elif enemyX[i] < 560:
+            elif enemyX[i] < 550:
                 enemyX[i] += enemyX_change[i]
-            elif enemyY[i] > 249:
+            elif enemyY[i] > 240:
                 enemyY[i] -= enemyY_change[i]
             else:
                 enemyX[i] += enemyX_change[i]
