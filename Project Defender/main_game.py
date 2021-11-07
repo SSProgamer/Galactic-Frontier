@@ -174,5 +174,4 @@ while running:
     if bulletY <= -20:
         bullet_state = "ready"
 
-    
     pygame.display.update()
