@@ -9,13 +9,13 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600))
 
 # Background
-background = pygame.image.load('stage/stage1.png')
+background = pygame.image.load('stage/Stage1_1.png')
 
 # Title
 pygame.display.set_caption("Project Defender")
 
 # Icon
-icon = pygame.image.load('Project Defender/icon.png')
+icon = pygame.image.load('Project Defender/Assets/icon.png')
 pygame.display.set_icon(icon)
 
 # Player
@@ -27,6 +27,8 @@ all_playerX = []
 all_playerY = []
 num_of_player = 0
 player_state = False
+
+turret_sec_lo = pygame.image.load('Project Defender/Assets/test.png')
 
 # Enemy
 enemyImg = []
@@ -71,7 +73,7 @@ def enemy(x, y, i):
 def fire_bullet(x, y):
     global bullet_state
     bullet_state = "fire"
-    screen.blit(bulletImg, (x + 24, y + 10))
+    screen.blit(bulletImg, (x, y))
 
 
 def isCollision(enemyX, enemyY, bulletX, bulletY):
@@ -90,9 +92,11 @@ while running:
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
 
-    if bullet_state == "ready":
-        bulletY = playerY
-        bulletX = playerX
+    print(bullet_state)
+
+    if bullet_state == "ready" and len(all_playerX) != 0:
+        bulletY = all_playerX[0] + 30
+        bulletX = all_playerY[0] + 30
 
     mouse_location = pygame.mouse.get_pos()
     for event in pygame.event.get():
@@ -109,8 +113,8 @@ while running:
                 pygame.mouse.set_visible(True)
                 player_state = False
                 all_playerImg.append(pygame.image.load('Project Defender/Assets/test2.png'))
-                all_playerX.append(mouse_location[0]-15)
-                all_playerY.append(mouse_location[1]-15)
+                all_playerX.append((mouse_location[0]//60)*(60)+10)
+                all_playerY.append((mouse_location[1]//60)*(60))
                 num_of_player += 1
                 playerX = 300
                 playerY = 550
@@ -122,7 +126,10 @@ while running:
         playerX = mouse_location[0]-30
         playerY = mouse_location[1]-30
 
+    screen.blit(turret_sec_lo, ((mouse_location[0]//60)*(60)+10, (mouse_location[1]//60)*(60)))
+
     while True in enemy_state:
+        #Remove Dead Enemy
         for i in range(num_of_enemies):
             if enemy_state[i]:
                 del enemyImg[i]
@@ -135,7 +142,15 @@ while running:
                 num_of_enemies -= 1
                 break
 
+    player(playerX, playerY)
+    for i in range(num_of_player):
+        all_player(all_playerX[i], all_playerY[i], i)
+
     for i in range(num_of_enemies):
+        if enemyX[i] >= 0 and enemyX[i] <= 800 and len(all_playerX) != 0:
+            fire_bullet(all_playerX[0] + 30, all_playerY[0] + 30)
+
+        #Enemy Movement
         if enemyX[i] < 150:
             enemyX[i] += enemyX_change[i]
         elif enemyY[i] < 350 and enemyX[i] < 557:
@@ -148,8 +163,9 @@ while running:
             enemyX[i] += enemyX_change[i]
 
         # Collision
-        collision = isCollision(enemyX[i], enemyY[i], bulletX, bulletY)
-        if collision and bullet_state == "fire":
+        if len(all_playerY) != 0:
+            collision = isCollision(enemyX[i], enemyY[i], all_playerX[0] + 30, all_playerY[0] + 30)
+        if len(all_playerY) != 0 and collision and bullet_state == "fire":
             bullet_state = "ready"
             enemy_health[i] -= 1
         if enemy_health[i] == 0 or enemyX[i] > 800:
@@ -160,12 +176,6 @@ while running:
     # Bullet Movement
     if bulletY <= -20:
         bullet_state = "ready"
-    if bullet_state == "fire":
-        fire_bullet(bulletX, bulletY)
-        bulletX -= bulletX_change
-        bulletY -= bulletY_change
 
-    player(playerX, playerY)
-    for i in range(num_of_player):
-        all_player(all_playerX[i], all_playerY[i], i)
+    
     pygame.display.update()
