@@ -92,8 +92,6 @@ while running:
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
 
-    print(bullet_state)
-
     if bullet_state == "ready" and len(all_playerX) != 0:
         bulletY = all_playerX[0] + 30
         bulletX = all_playerY[0] + 30
@@ -125,8 +123,7 @@ while running:
     if player_state:
         playerX = mouse_location[0]-30
         playerY = mouse_location[1]-30
-
-    screen.blit(turret_sec_lo, ((mouse_location[0]//60)*(60)+10, (mouse_location[1]//60)*(60)))
+        screen.blit(turret_sec_lo, ((mouse_location[0]//60)*(60)+10, (mouse_location[1]//60)*(60)))
 
     while True in enemy_state:
         #Remove Dead Enemy
