@@ -1,9 +1,9 @@
 import pygame
-import math
 import random
 
 # Intialize The Pygame
 pygame.init()
+
 
 # Create The Screen
 screen = pygame.display.set_mode((800, 600))
@@ -15,21 +15,28 @@ background = pygame.image.load('stage/stage01_2.png')
 pygame.display.set_caption("Project Defender")
 
 # Icon
-icon = pygame.image.load('Project Defender/Assets/icon.png')
+icon = pygame.image.load('main/Assets/icon.png')
 pygame.display.set_icon(icon)
 
+base_hp = 5
+
 # Turret
-turret_1 = pygame.image.load('Project Defender/Assets/turret_1.png')
-turret_2 = pygame.image.load('Project Defender/Assets/turret_2.png')
-turret_3 = pygame.image.load('Project Defender/Assets/turret_3.png')
+turret_1 = pygame.image.load('main/Assets/turret_1.png')
+turret_2 = pygame.image.load('main/Assets/turret_2.png')
+turret_3 = pygame.image.load('main/Assets/turret_3.png')
 all_turretImg = []
 all_turretlo = []
+all_turretCool = []
+all_turret_type = []
+type_range = [200, 100, 400]
+type_cool_down = [50, 50, 100]
+type_damage = [1, 2, 2]
 num_of_turret = 0
 turret_state = False
-turret_sec_lo = pygame.image.load('Project Defender/Assets/test.png')
-slot_1 = pygame.image.load('Project Defender/Assets/slot_1.png')
-slot_2 = pygame.image.load('Project Defender/Assets/slot_2.png')
-slot_3 = pygame.image.load('Project Defender/Assets/slot_3.png')
+turret_sec_lo = pygame.image.load('main/Assets/test.png')
+slot_1 = pygame.image.load('main/Assets/slot_1.png')
+slot_2 = pygame.image.load('main/Assets/slot_2.png')
+slot_3 = pygame.image.load('main/Assets/slot_3.png')
 
 # Enemy
 enemyImg = []
@@ -43,7 +50,7 @@ num_of_enemies = 6
 check_enemy_move = False
 
 for i in range(num_of_enemies):
-    enemyImg.append(pygame.image.load('Project Defender/Assets/test.png'))
+    enemyImg.append(pygame.image.load('main/Assets/test.png'))
     enemyX.append((-100)-i*75)
     enemyY.append(240)
     enemyX_change.append(1)
@@ -51,13 +58,8 @@ for i in range(num_of_enemies):
     enemy_health.append(4)
     enemy_state.append(False)
 
-# Bullet
-bulletImg = pygame.image.load('Project Defender/square.png')
-bulletX = 0
-bulletY = 0
-bulletX_change = 0
-bulletY_change = 5
-bullet_state = "ready"
+laser = pygame.image.load('main/Assets/laser.png')
+laser = pygame.transform.scale(laser, (200, 3))
 
 
 def player(select, x, y):
@@ -95,16 +97,19 @@ while running:
                 if mouse_location[0] >= 100 and mouse_location[0] <= 260 and \
                         mouse_location[1] >= 540 and mouse_location[1] <= 600:
                     select = turret_1
+                    turret_type = 0
                     pygame.mouse.set_visible(False)
                     turret_state = True
                 elif mouse_location[0] >= 320 and mouse_location[0] <= 480 and \
                         mouse_location[1] >= 540 and mouse_location[1] <= 600:
                     select = turret_2
+                    turret_type = 1
                     pygame.mouse.set_visible(False)
                     turret_state = True
                 elif mouse_location[0] >= 540 and mouse_location[0] <= 700 and \
                         mouse_location[1] >= 540 and mouse_location[1] <= 600:
                     select = turret_3
+                    turret_type = 2
                     pygame.mouse.set_visible(False)
                     turret_state = True
             elif mouse_press[0] and turret_state and \
@@ -114,6 +119,8 @@ while running:
                 turret_state = False
                 all_turretImg.append(select)
                 all_turretlo.append(fix_mouse_lo)
+                all_turretCool.append(0)
+                all_turret_type.append(turret_type)
                 num_of_turret += 1
             if mouse_press[2]:
                 pygame.mouse.set_visible(True)
@@ -159,6 +166,15 @@ while running:
 
     for i in range(num_of_turret):
         all_player(all_turretlo[i], i)
+        if all_turretCool[i] != type_cool_down[all_turret_type[i]]:
+            all_turretCool[i] += 1
+        for j in range(num_of_enemies):
+            if ((enemyX[j]+15)-(all_turretlo[i][0]))**2 + \
+                ((enemyY[j]+15)-(all_turretlo[i][1]))**2 <= type_range[all_turret_type[i]]**2 and \
+                    all_turretCool[i] == type_cool_down[all_turret_type[i]]:
+                enemy_health[j] -= type_damage[all_turret_type[i]]
+                all_turretCool[i] = 0
+                screen.blit(laser, (all_turretlo[i][0]+30, all_turretlo[i][1]+30))
 
     for i in range(num_of_enemies):
         # Enemy Movement
@@ -175,11 +191,12 @@ while running:
                 enemyX[i] += enemyX_change[i]
 
         # Collision
-        
+
         if enemy_health[i] == 0 or enemyX[i] > 800:
+            if enemyX[i] > 800:
+                base_hp -= 1
             enemy_state[i] = True
 
         enemy(enemyX[i], enemyY[i], i)
 
-    # Bullet Movement
     pygame.display.update()
