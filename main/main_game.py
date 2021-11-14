@@ -64,8 +64,6 @@ for i in range(num_of_enemies):
     enemy_state.append(False)
 
 
-
-
 def player(select, x, y):
     screen.blit(select, (x, y))
 
@@ -87,6 +85,7 @@ while running:
     screen.blit(slot_1, (100, 540))
     screen.blit(slot_2, (320, 540))
     screen.blit(slot_3, (540, 540))
+    
 
     mouse_location = pygame.mouse.get_pos()
     fix_mouse_lo = [(mouse_location[0]//60)*(60)+10,
