@@ -1,4 +1,5 @@
 import pygame
+import math
 import random
 
 # Intialize The Pygame
@@ -24,10 +25,13 @@ base_hp = 5
 turret_1 = pygame.image.load('main/Assets/turret_1.png')
 turret_2 = pygame.image.load('main/Assets/turret_2.png')
 turret_3 = pygame.image.load('main/Assets/turret_3.png')
+laser = pygame.image.load('main/Assets/laser.png')
 all_turretImg = []
 all_turretlo = []
 all_turretCool = []
 all_turret_type = []
+turret_laser = []
+laser_cool = []
 type_range = [200, 100, 400]
 type_cool_down = [50, 50, 100]
 type_damage = [1, 2, 2]
@@ -37,6 +41,7 @@ turret_sec_lo = pygame.image.load('main/Assets/test.png')
 slot_1 = pygame.image.load('main/Assets/slot_1.png')
 slot_2 = pygame.image.load('main/Assets/slot_2.png')
 slot_3 = pygame.image.load('main/Assets/slot_3.png')
+
 
 # Enemy
 enemyImg = []
@@ -58,8 +63,7 @@ for i in range(num_of_enemies):
     enemy_health.append(4)
     enemy_state.append(False)
 
-laser = pygame.image.load('main/Assets/laser.png')
-laser = pygame.transform.scale(laser, (200, 3))
+
 
 
 def player(select, x, y):
@@ -121,6 +125,8 @@ while running:
                 all_turretlo.append(fix_mouse_lo)
                 all_turretCool.append(0)
                 all_turret_type.append(turret_type)
+                turret_laser.append(laser)
+                laser_cool.append(0)
                 num_of_turret += 1
             if mouse_press[2]:
                 pygame.mouse.set_visible(True)
@@ -169,12 +175,18 @@ while running:
         if all_turretCool[i] != type_cool_down[all_turret_type[i]]:
             all_turretCool[i] += 1
         for j in range(num_of_enemies):
-            if ((enemyX[j]+15)-(all_turretlo[i][0]))**2 + \
-                ((enemyY[j]+15)-(all_turretlo[i][1]))**2 <= type_range[all_turret_type[i]]**2 and \
+            if ((enemyX[j]+30)-(all_turretlo[i][0]+30))**2 + \
+                ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2 <= type_range[all_turret_type[i]]**2 and \
                     all_turretCool[i] == type_cool_down[all_turret_type[i]]:
                 enemy_health[j] -= type_damage[all_turret_type[i]]
                 all_turretCool[i] = 0
-                screen.blit(laser, (all_turretlo[i][0]+30, all_turretlo[i][1]+30))
+                distance = math.sqrt(((enemyX[j]+30)-(all_turretlo[i][0]+30))**2+\
+                    ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2)
+                turret_laser[i] = pygame.transform.scale(turret_laser[i], (distance, 3))
+                laser_cool[i] = 5
+        if laser_cool[i] > 0:
+            screen.blit(turret_laser[i], (all_turretlo[i][0]+30, all_turretlo[i][1]+30))
+            laser_cool[i] -= 1
 
     for i in range(num_of_enemies):
         # Enemy Movement
@@ -195,6 +207,7 @@ while running:
         if enemy_health[i] == 0 or enemyX[i] > 800:
             if enemyX[i] > 800:
                 base_hp -= 1
+                print(base_hp)
             enemy_state[i] = True
 
         enemy(enemyX[i], enemyY[i], i)
