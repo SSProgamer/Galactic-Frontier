@@ -181,8 +181,8 @@ while running:
                 all_turretCool[i] = 0
                 distance = math.sqrt(((enemyX[j]+30)-(all_turretlo[i][0]+30))**2+\
                     ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2)
-                turret_laser[i] = pygame.transform.scale(turret_laser[i], (distance, 3))
-                laser_cool[i] = 5
+                turret_laser[i] = pygame.transform.scale(turret_laser[i], (3, distance))
+                laser_cool[i] = 10
         if laser_cool[i] > 0:
             screen.blit(turret_laser[i], (all_turretlo[i][0]+30, all_turretlo[i][1]+30))
             laser_cool[i] -= 1
