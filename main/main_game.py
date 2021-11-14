@@ -203,7 +203,7 @@ while running:
 
         # Collision
 
-        if enemy_health[i] == 0 or enemyX[i] > 800:
+        if enemy_health[i] <= 0 or enemyX[i] > 800:
             if enemyX[i] > 800:
                 base_hp -= 1
                 print(base_hp)
