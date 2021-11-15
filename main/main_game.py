@@ -19,6 +19,9 @@ pygame.display.set_caption("Project Defender")
 icon = pygame.image.load('main/Assets/icon.png')
 pygame.display.set_icon(icon)
 
+delete = pygame.image.load('main/Assets/delete.png')
+delete_turret = False
+
 base_hp = 5
 
 # Turret
@@ -55,6 +58,8 @@ enemy_state = []
 num_of_enemies = 6
 check_enemy_move = False
 
+angle = 0
+
 for i in range(num_of_enemies):
     enemyImg.append(pygame.image.load('main/Assets/test.png'))
     enemyX.append((-100)-i*75)
@@ -69,12 +74,15 @@ def player(select, x, y):
     screen.blit(select, (x, y))
 
 
-def all_player(i, turret_rect):
+def all_turret(i, turret_rect):
     screen.blit(all_turretImg[i], turret_rect)
 
 
 def enemy(x, y, i):
     screen.blit(enemyImg[i], (x, y))
+
+def select_delete(image, x, y):
+    screen.blit(image, (x, y))
 
 def rotate(image, angle, location):
 	rotated_surface = pygame.transform.rotozoom(image, angle, 1)
@@ -85,20 +93,27 @@ def rotate(image, angle, location):
 running = True
 while running:
 
+    #Add Background
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
     screen.blit(slot_1, (100, 540))
     screen.blit(slot_2, (320, 540))
     screen.blit(slot_3, (540, 540))
-    
+    screen.blit(delete, (755, 555))
 
+    #Get Mouse Location 
     mouse_location = pygame.mouse.get_pos()
     fix_mouse_lo = [(mouse_location[0]//60)*(60)+10,
                     (mouse_location[1]//60)*(60)]
 
+    #Player Interact
     for event in pygame.event.get():
+
+        #Quit Game
         if event.type == pygame.QUIT:
             running = False
+
+        #Mouse Event
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_press = pygame.mouse.get_pressed()
             if mouse_press[0] and check_enemy_move == False and turret_state == False:
@@ -108,18 +123,21 @@ while running:
                     turret_type = 0
                     pygame.mouse.set_visible(False)
                     turret_state = True
+                    delete_turret = False
                 elif mouse_location[0] >= 320 and mouse_location[0] <= 480 and \
                         mouse_location[1] >= 540 and mouse_location[1] <= 600:
                     select = turret_2
                     turret_type = 1
                     pygame.mouse.set_visible(False)
                     turret_state = True
+                    delete_turret = False
                 elif mouse_location[0] >= 540 and mouse_location[0] <= 700 and \
                         mouse_location[1] >= 540 and mouse_location[1] <= 600:
                     select = turret_3
                     turret_type = 2
                     pygame.mouse.set_visible(False)
                     turret_state = True
+                    delete_turret = False
             elif mouse_press[0] and turret_state and \
                     mouse_location[0] < 780 and mouse_location[1] < 540 \
                     and fix_mouse_lo not in all_turretlo and check_enemy_move == False:
@@ -132,9 +150,20 @@ while running:
                 turret_laser.append(laser)
                 laser_cool.append(0)
                 num_of_turret += 1
+            if mouse_press[0] and mouse_location[0] >= 755 and \
+                mouse_location[0] <= 785 and mouse_location[1] >= 555 and mouse_location[1] <= 585:
+                pygame.mouse.set_visible(False)
+                turret_state = False
+                delete_turret = True
+            elif mouse_press[0] and delete_turret:
+                if fix_mouse_lo in all_turretlo:
+                    print("yes")
             if mouse_press[2]:
                 pygame.mouse.set_visible(True)
                 turret_state = False
+                delete_turret = False
+
+        #Key Event
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE:
                 running = False
@@ -160,6 +189,9 @@ while running:
         if mouse_location[0] < 780 and mouse_location[1] < 540:
             screen.blit(turret_sec_lo, (fix_mouse_lo[0], fix_mouse_lo[1]))
         player(select, playerX, playerY)
+    
+    if delete_turret:
+        select_delete(delete, mouse_location[0]-15, mouse_location[1]-15)
 
     while True in enemy_state:
         # Remove Dead Enemy
@@ -188,11 +220,10 @@ while running:
                     ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2)
                 turret_laser[i] = pygame.transform.scale(turret_laser[i], (3, distance))
                 laser_cool[i] = 10
-        all_turretImg[i], turret_rect = rotate(all_turretImg[i], 1, all_turretlo[i])
         if laser_cool[i] > 0:
-            screen.blit(turret_laser[i], (all_turretlo[i][0]+29, all_turretlo[i][1]+29))
+            screen.blit(turret_laser[i], (all_turretlo[i][0]+30, all_turretlo[i][1]+30))
             laser_cool[i] -= 1
-        all_player(i, turret_rect)
+        all_turret(i, all_turretlo[i])
 
     for i in range(num_of_enemies):
         # Enemy Movement
@@ -207,8 +238,6 @@ while running:
                 enemyY[i] -= enemyY_change[i]
             else:
                 enemyX[i] += enemyX_change[i]
-
-        # Collision
 
         if enemy_health[i] <= 0 or enemyX[i] > 800:
             if enemyX[i] > 800:
