@@ -6,11 +6,11 @@ pygame.init()
 # create screen
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Demo')
-background = pygame.image.load("main_game.png")
-rushia = pygame.image.load("tenor.gif")
+background = pygame.image.load("test_groud/main_game.png")
+rushia = pygame.image.load("test_groud/tenor.gif")
 background_1_rect = rushia.get_rect(center = (400,300))
-start_img = pygame.image.load('start_btn.png').convert_alpha()
-exit_img = pygame.image.load('exit_btn.png').convert_alpha()
+start_img = pygame.image.load('test_groud/start_btn.png').convert_alpha()
+exit_img = pygame.image.load('test_groud/exit_btn.png').convert_alpha()
 
 #create button instances
 start_button = puy.Button(325, 300, start_img, 0.6)
