@@ -24,7 +24,7 @@ run = True
 running = False
 angle = 1
 while run:
-
+	
 	screen.fill((0, 0, 0))
 	screen.blit(background, (0, 0))
 	if start_button.draw(screen):
