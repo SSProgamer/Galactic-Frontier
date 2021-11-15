@@ -19,6 +19,7 @@ pygame.display.set_caption("Project Defender")
 icon = pygame.image.load('main/Assets/icon.png')
 pygame.display.set_icon(icon)
 
+game_over = pygame.image.load('main/Assets/git_gud.png')
 delete = pygame.image.load('main/Assets/delete.png')
 delete_turret = False
 ban_location = [[10, 240], [70, 240], [130, 240], [130, 300], [130, 360], [190, 360],
@@ -273,7 +274,6 @@ while running:
         enemy(enemyX[i], enemyY[i], i)
 
     if base_hp <= 0:
-        screen.blit(background, (0, 0))
-        print("yes")
+        screen.blit(game_over, (0, 0))
 
     pygame.display.update()
