@@ -21,6 +21,10 @@ pygame.display.set_icon(icon)
 
 delete = pygame.image.load('main/Assets/delete.png')
 delete_turret = False
+ban_location = [[10, 240], [70, 240], [130, 240], [130, 300], [130, 360], [190, 360],
+                [250, 360], [310, 360], [370, 360], [430, 360], [
+                    490, 360], [550, 360], [550, 300], [550, 240],
+                [610, 240], [670, 240], [730, 240]]
 
 base_hp = 5
 
@@ -42,6 +46,7 @@ type_damage = [1, 2, 2]
 num_of_turret = 0
 turret_state = False
 turret_sec_lo = pygame.image.load('main/Assets/test.png')
+turret_sec_lo_cannot = pygame.image.load('main/Assets/cannot.png')
 slot_1 = pygame.image.load('main/Assets/slot_1.png')
 slot_2 = pygame.image.load('main/Assets/slot_2.png')
 slot_3 = pygame.image.load('main/Assets/slot_3.png')
@@ -81,19 +86,23 @@ def all_turret(i, turret_rect):
 def enemy(x, y, i):
     screen.blit(enemyImg[i], (x, y))
 
+
 def select_delete(image, x, y):
     screen.blit(image, (x, y))
 
+
 def rotate(image, angle, location):
-	rotated_surface = pygame.transform.rotozoom(image, angle, 1)
-	rotated_rect = rotated_surface.get_rect(center = (location[0]+30, location[1]+30))
-	return rotated_surface, rotated_rect
+    rotated_surface = pygame.transform.rotozoom(image, angle, 1)
+    rotated_rect = rotated_surface.get_rect(
+        center=(location[0]+30, location[1]+30))
+    return rotated_surface, rotated_rect
+
 
 # Main Game
 running = True
 while running:
 
-    #Add Background
+    # Add Background
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
     screen.blit(slot_1, (100, 540))
@@ -101,19 +110,19 @@ while running:
     screen.blit(slot_3, (540, 540))
     screen.blit(delete, (755, 555))
 
-    #Get Mouse Location 
+    # Get Mouse Location
     mouse_location = pygame.mouse.get_pos()
     fix_mouse_lo = [(mouse_location[0]//60)*(60)+10,
                     (mouse_location[1]//60)*(60)]
 
-    #Player Interact
+    # Player Interact
     for event in pygame.event.get():
 
-        #Quit Game
+        # Quit Game
         if event.type == pygame.QUIT:
             running = False
 
-        #Mouse Event
+        # Mouse Event
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_press = pygame.mouse.get_pressed()
             if mouse_press[0] and check_enemy_move == False and turret_state == False:
@@ -140,7 +149,8 @@ while running:
                     delete_turret = False
             elif mouse_press[0] and turret_state and \
                     mouse_location[0] < 780 and mouse_location[1] < 540 \
-                    and fix_mouse_lo not in all_turretlo and check_enemy_move == False:
+                    and fix_mouse_lo not in all_turretlo and check_enemy_move == False \
+            and fix_mouse_lo not in ban_location:
                 pygame.mouse.set_visible(True)
                 turret_state = False
                 all_turretImg.append(select)
@@ -151,19 +161,28 @@ while running:
                 laser_cool.append(0)
                 num_of_turret += 1
             if mouse_press[0] and mouse_location[0] >= 755 and \
-                mouse_location[0] <= 785 and mouse_location[1] >= 555 and mouse_location[1] <= 585:
+                mouse_location[0] <= 785 and mouse_location[1] >= 555 and \
+                    mouse_location[1] <= 585 and check_enemy_move == False:
                 pygame.mouse.set_visible(False)
                 turret_state = False
                 delete_turret = True
             elif mouse_press[0] and delete_turret:
                 if fix_mouse_lo in all_turretlo:
-                    print("yes")
+                    remove_index = all_turretlo.index(fix_mouse_lo)
+                    all_turretImg.pop(remove_index)
+                    all_turretlo.pop(remove_index)
+                    all_turretCool.pop(remove_index)
+                    all_turret_type.pop(remove_index)
+                    turret_laser.pop(remove_index)
+                    laser_cool.pop(remove_index)
+                    num_of_turret -= 1
+
             if mouse_press[2]:
                 pygame.mouse.set_visible(True)
                 turret_state = False
                 delete_turret = False
 
-        #Key Event
+        # Key Event
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE:
                 running = False
@@ -187,10 +206,14 @@ while running:
         playerX = mouse_location[0]-30
         playerY = mouse_location[1]-30
         if mouse_location[0] < 780 and mouse_location[1] < 540:
-            screen.blit(turret_sec_lo, (fix_mouse_lo[0], fix_mouse_lo[1]))
+            if (fix_mouse_lo in ban_location) or (fix_mouse_lo in all_turretlo):
+                screen.blit(turret_sec_lo_cannot,
+                            (fix_mouse_lo[0], fix_mouse_lo[1]))
+            else:
+                screen.blit(turret_sec_lo, (fix_mouse_lo[0], fix_mouse_lo[1]))
         player(select, playerX, playerY)
-    
-    if delete_turret:
+
+    if delete_turret and check_enemy_move == False:
         select_delete(delete, mouse_location[0]-15, mouse_location[1]-15)
 
     while True in enemy_state:
@@ -216,12 +239,14 @@ while running:
                     all_turretCool[i] == type_cool_down[all_turret_type[i]] and enemyX[j] > -30:
                 enemy_health[j] -= type_damage[all_turret_type[i]]
                 all_turretCool[i] = 0
-                distance = math.sqrt(((enemyX[j]+30)-(all_turretlo[i][0]+30))**2+\
-                    ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2)
-                turret_laser[i] = pygame.transform.scale(turret_laser[i], (3, distance))
+                distance = math.sqrt(((enemyX[j]+30)-(all_turretlo[i][0]+30))**2 +
+                                     ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2)
+                turret_laser[i] = pygame.transform.scale(
+                    turret_laser[i], (3, distance))
                 laser_cool[i] = 10
         if laser_cool[i] > 0:
-            screen.blit(turret_laser[i], (all_turretlo[i][0]+30, all_turretlo[i][1]+30))
+            screen.blit(turret_laser[i], (all_turretlo[i]
+                        [0]+30, all_turretlo[i][1]+30))
             laser_cool[i] -= 1
         all_turret(i, all_turretlo[i])
 
