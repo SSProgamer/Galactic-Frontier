@@ -170,7 +170,6 @@ while running:
                 break
 
     for i in range(num_of_turret):
-        all_player(all_turretlo[i], i)
         if all_turretCool[i] != type_cool_down[all_turret_type[i]]:
             all_turretCool[i] += 1
         for j in range(num_of_enemies):
@@ -184,8 +183,9 @@ while running:
                 turret_laser[i] = pygame.transform.scale(turret_laser[i], (3, distance))
                 laser_cool[i] = 10
         if laser_cool[i] > 0:
-            screen.blit(turret_laser[i], (all_turretlo[i][0]+30, all_turretlo[i][1]+30))
+            screen.blit(turret_laser[i], (all_turretlo[i][0]+29, all_turretlo[i][1]+29))
             laser_cool[i] -= 1
+        all_player(all_turretlo[i], i)
 
     for i in range(num_of_enemies):
         # Enemy Movement
