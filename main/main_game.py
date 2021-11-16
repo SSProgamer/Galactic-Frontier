@@ -26,6 +26,14 @@ exit_button = btn.Button(330, 425, exit_img, 0.55)
 icon = pygame.image.load('main/Assets/icon.png')
 pygame.display.set_icon(icon)
 
+#music
+bgm_vol = 0.1
+sfx_vol = 0.1
+pygame.mixer.music.load('main/Assets/Memory.mp3')
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(bgm_vol)
+hit = pygame.mixer.Sound('main/Assets/hit.mp3')
+
 game_over = pygame.image.load('main/Assets/git_gud.png')
 delete = pygame.image.load('main/Assets/delete.png')
 delete_turret = False
@@ -128,7 +136,7 @@ while background_menu:
             screen.blit(slot_2, (320, 540))
             screen.blit(slot_3, (540, 540))
             screen.blit(delete, (755, 555))
-
+            
             # Get Mouse Location
             mouse_location = pygame.mouse.get_pos()
             fix_mouse_lo = [(mouse_location[0]//60)*(60)+10,
@@ -136,6 +144,7 @@ while background_menu:
 
             # Player Interact
             for event in pygame.event.get():
+
 
                 # Quit Game
                 if event.type == pygame.QUIT:
