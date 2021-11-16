@@ -75,7 +75,7 @@ def enemy_born():
     num_of_enemies = 5+wave
     print(num_of_enemies)
     for i in range(num_of_enemies):
-        enemyImg.append(pygame.image.load('main/Assets/test.png'))
+        enemyImg.append(pygame.image.load('main/Assets/ufo.png'))
         ans = (mainn.Enemy)
         ans = ans.main(i)
         enemyX.append(ans[0])
