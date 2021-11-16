@@ -19,6 +19,7 @@ pygame.display.set_caption("Project Defender")
 icon = pygame.image.load('main/Assets/icon.png')
 pygame.display.set_icon(icon)
 
+# In Game Element
 game_over = pygame.image.load('main/Assets/git_gud.png')
 delete = pygame.image.load('main/Assets/delete.png')
 delete_turret = False
@@ -64,11 +65,13 @@ enemy_state = []
 num_of_enemies = 6
 check_enemy_move = False
 angle = 0
+
+
 def enemy_born():
     num_of_enemies = 5+wave
     print(num_of_enemies)
     for i in range(num_of_enemies):
-        enemyImg.append(pygame.image.load('main/Assets/test.png'))
+        enemyImg.append(pygame.image.load('main/Assets/ufo.png'))
         ans = (mainn.Enemy)
         ans = ans.main(i)
         enemyX.append(ans[0])
@@ -77,9 +80,12 @@ def enemy_born():
         enemyY_change.append(ans[3])
         enemy_health.append(ans[4])
         enemy_state.append(ans[5])
-        print((enemy_state,enemyY))
-wave = 1        
+        print((enemy_state, enemyY))
+
+
+wave = 1
 enemy_born()
+
 
 def player(select, x, y):
     screen.blit(select, (x, y))
@@ -95,13 +101,6 @@ def enemy(x, y, i):
 
 def select_delete(image, x, y):
     screen.blit(image, (x, y))
-
-
-def rotate(image, angle, location):
-    rotated_surface = pygame.transform.rotozoom(image, angle, 1)
-    rotated_rect = rotated_surface.get_rect(
-        center=(location[0]+30, location[1]+30))
-    return rotated_surface, rotated_rect
 
 
 # Main Game
@@ -156,7 +155,7 @@ while running:
             elif mouse_press[0] and turret_state and \
                     mouse_location[0] < 780 and mouse_location[1] < 540 \
                     and fix_mouse_lo not in all_turretlo and check_enemy_move == False \
-            and fix_mouse_lo not in ban_location:
+                and fix_mouse_lo not in ban_location:
                 pygame.mouse.set_visible(True)
                 turret_state = False
                 all_turretImg.append(select)
@@ -184,7 +183,7 @@ while running:
                     num_of_turret -= 1
 
             if mouse_press[2]:
-                
+
                 pygame.mouse.set_visible(True)
                 turret_state = False
                 delete_turret = False
@@ -198,7 +197,7 @@ while running:
                 pygame.mouse.set_visible(True)
                 if wave > 1:
                     enemy_born()
-                #"****"
+                # "****"
             if event.key == pygame.K_1 and check_enemy_move == False:
                 select = turret_1
                 pygame.mouse.set_visible(False)
@@ -211,6 +210,8 @@ while running:
                 select = turret_3
                 pygame.mouse.set_visible(False)
                 turret_state = True
+
+    # Turret Select
     if turret_state and check_enemy_move == False:
         playerX = mouse_location[0]-30
         playerY = mouse_location[1]-30
@@ -222,8 +223,10 @@ while running:
                 screen.blit(turret_sec_lo, (fix_mouse_lo[0], fix_mouse_lo[1]))
         player(select, playerX, playerY)
 
+    # Delete Select
     if delete_turret and check_enemy_move == False:
         select_delete(delete, mouse_location[0]-15, mouse_location[1]-15)
+
     while True in enemy_state:
         # Remove Dead Enemy
         for i in range(num_of_enemies):
@@ -238,17 +241,21 @@ while running:
                 num_of_enemies -= 1
                 break
 
+    # Turret Attack
     for i in range(num_of_turret):
         if all_turretCool[i] != type_cool_down[all_turret_type[i]]:
             all_turretCool[i] += 1
         for j in range(num_of_enemies):
             if ((enemyX[j]+30)-(all_turretlo[i][0]+30))**2 + \
-                ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2 <= type_range[all_turret_type[i]]**2 and \
-                all_turretCool[i] == type_cool_down[all_turret_type[i]] and enemyX[j] > -30:
+                ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2 <= \
+                    type_range[all_turret_type[i]]**2 and \
+                        all_turretCool[i] == type_cool_down[all_turret_type[i]] \
+                            and enemyX[j] > -30:
                 enemy_health[j] -= type_damage[all_turret_type[i]]
                 all_turretCool[i] = 0
-                distance = math.sqrt(((enemyX[j]+30)-(all_turretlo[i][0]+30))**2 +
-                                     ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2)
+                distance = math.sqrt(
+                    ((enemyX[j]+30)-(all_turretlo[i][0]+30))**2 + \
+                        ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2)
                 turret_laser[i] = pygame.transform.scale(
                     turret_laser[i], (3, distance))
                 laser_cool[i] = 10
@@ -272,6 +279,7 @@ while running:
             else:
                 enemyX[i] += enemyX_change[i]
 
+        # Enemy Health
         if enemy_health[i] <= 0 or enemyX[i] > 800:
             if enemyX[i] > 800:
                 base_hp -= 1
@@ -279,10 +287,12 @@ while running:
             enemy_state[i] = True
 
         enemy(enemyX[i], enemyY[i], i)
+
     # mouse go again but enemy can't move
-    if enemy_state == [True]:
+    if num_of_enemies == 0:
         check_enemy_move = False
-        
+
+    # Game Over
     if base_hp <= 0:
         screen.blit(game_over, (0, 0))
 
