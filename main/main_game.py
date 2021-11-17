@@ -18,10 +18,11 @@ pygame.display.set_caption("Project Defender")
 #button
 start_img = pygame.image.load('button/start_b.png').convert_alpha()
 exit_img = pygame.image.load('button/button_e.png').convert_alpha()
-
+return_img = pygame.image.load('button/button.png').convert_alpha()
 #create button instances
 start_button = btn.Button(325, 300, start_img, 0.6)
 exit_button = btn.Button(330, 425, exit_img, 0.55)
+menu_button = btn.Button(320, 425, return_img, 1)
 # Icon
 icon = pygame.image.load('main/Assets/icon.png')
 pygame.display.set_icon(icon)
@@ -128,6 +129,7 @@ while background_menu:
     screen.blit(background_menu, (0, 0))
     if start_button.draw(screen):
         running = True
+        base_hp = 5
         while running:
 
             # Add Background
@@ -325,7 +327,9 @@ while background_menu:
                 pygame.mouse.set_visible(True)
             if base_hp <= 0:
                 screen.blit(game_over, (0, 0))
-
+                if menu_button.draw(screen):
+                    running = False
+                    
             pygame.display.update()
     if exit_button.draw(screen):
         pygame.quit()
