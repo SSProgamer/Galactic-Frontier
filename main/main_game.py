@@ -107,8 +107,10 @@ def enemy_born():
         enemy_state.append(ans[5])
       
 
-def player(select, x, y):
+def player(select, x, y, radius):
+    pygame.draw.circle(screen, (255,255,255), (x+30, y+30), radius, 5)
     screen.blit(select, (x, y))
+    
 
 
 def all_turret(i, turret_rect):
@@ -272,7 +274,7 @@ while background_menu:
                                     (fix_mouse_lo[0], fix_mouse_lo[1]))
                     else:
                         screen.blit(turret_sec_lo, (fix_mouse_lo[0], fix_mouse_lo[1]))
-                player(select, playerX, playerY)
+                player(select, playerX, playerY, type_range[turret_type])
 
             # Remove Dead Enemy    
             while True in enemy_state:
