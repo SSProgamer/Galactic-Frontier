@@ -13,7 +13,7 @@ class Enemy():
 			enemyX = (-100)-num*75
 			enemyY = 240
 			enemyX_change,enemyY_change = 3,3
-			enemy_health,enemy_state = (100),(False)
+			enemy_health,enemy_state = (75),(False)
 		elif enemy_type == 3:
 			enemyImg = (pygame.image.load('main/Assets/enemy_heavy.png'))
 			enemyX = (-100)-num*75

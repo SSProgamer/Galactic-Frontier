@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((800, 600))
 background = pygame.image.load('stage/stage01_2.png')
 background_menu = pygame.image.load("game_cover/main_game.png")
 # Title
-pygame.display.set_caption("Project Defender")
+pygame.display.set_caption("Galactic Frontier")
 #button
 start_img = pygame.image.load('button/start_b.png').convert_alpha()
 exit_img = pygame.image.load('button/button_e.png').convert_alpha()
@@ -90,9 +90,15 @@ def show_font():
     show_wave = font.render("WAVE : %d"%wave, True ,(255, 255, 255))
     show_enemy = font.render("ENEMY : %d"%num_of_enemies, True ,(255, 255, 255))
     show_hp = font.render("HP : %d"%base_hp, True ,(255, 255, 255))
-    screen.blit(show_wave, (30, 40)) #กำหนดต้ำแหน่ง
-    screen.blit(show_enemy, (370, 40))
-    screen.blit(show_hp, (560, 40))
+    show_turret_1 = font.render("%d"%turret_amount[0], True ,(255, 255, 255))
+    show_turret_2 = font.render("%d"%turret_amount[1], True ,(255, 255, 255))
+    show_turret_3 = font.render("%d"%turret_amount[2], True ,(255, 255, 255))
+    screen.blit(show_wave, (10, 10)) #กำหนดต้ำแหน่ง
+    screen.blit(show_enemy, (335, 10))
+    screen.blit(show_hp, (700, 10))
+    screen.blit(show_turret_1, (215, 557))
+    screen.blit(show_turret_2, (435, 557))
+    screen.blit(show_turret_3, (660, 558))
 
 def enemy_born():
     for i in range(num_of_enemies):
@@ -341,12 +347,8 @@ while background_menu:
                 else:
                     for _ in range(2):
                         add_turret(random.randrange(100))
-                print("Turret 1 : %d" %turret_amount[0])
-                print("Turret 2 : %d" %turret_amount[1])
-                print("Turret 3 : %d" %turret_amount[2])
                 wave += 1
                 num_of_enemies = 6+2*(wave-1) #เติมที่นี้
-                print("Wave : %d" %wave)
                 enemy_born()
                 check_enemy_move = False
                 turret_state = False
