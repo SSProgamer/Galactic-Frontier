@@ -1,11 +1,10 @@
 import pygame
 import math
 import random
-import mainn
+import enemy_info
 import btn
 # Intialize The Pygame
 pygame.init()
-
 
 # Create The Screen
 screen = pygame.display.set_mode((800, 600))
@@ -60,9 +59,9 @@ all_turret_type = []
 all_turret_rect = []
 turret_fire = []
 laser_cool = []
-type_range = [200, 100, 400]
+type_range = [200, 100, 400] #range of turrets
 type_cool_down = [50, 50, 100]
-type_damage = [1, 2, 2]
+type_damage = [25, 35, 50]
 num_of_turret = 0
 turret_state = False
 turret_sec_lo = pygame.image.load('main/Assets/test.png')
@@ -85,11 +84,21 @@ check_enemy_move = False
 angle = 0
 wave = 0
 
+font = pygame.font.Font("main/fort/Minecraft.ttf", 30)
+
+def show_font():
+    show_wave = font.render("WAVE : %d"%wave, True ,(255, 255, 255))
+    show_enemy = font.render("ENEMY : %d"%num_of_enemies, True ,(255, 255, 255))
+    show_hp = font.render("HP : %d"%base_hp, True ,(255, 255, 255))
+    screen.blit(show_wave, (30, 40)) #กำหนดต้ำแหน่ง
+    screen.blit(show_enemy, (370, 40))
+    screen.blit(show_hp, (560, 40))
+
 def enemy_born():
     for i in range(num_of_enemies):
-        enemyImg.append(pygame.image.load('main/Assets/enemy_normal.png'))
-        ans = (mainn.Enemy)
-        ans = ans.main(i)
+        ans = (enemy_info.Enemy)
+        ans = ans.main(i, random.randrange(1, 4))
+        enemyImg.append(ans[6])
         enemyX.append(ans[0])
         enemyY.append(ans[1])
         enemyX_change.append(ans[2])
@@ -115,9 +124,9 @@ def select_delete(image, x, y):
 
 def add_turret(percent):
     global turret_amount
-    if percent <= 50:
+    if percent <= 49:
         turret_amount[0] += 1
-    elif percent <= 70:
+    elif percent <= 79:
         turret_amount[1] += 1
     else:
         turret_amount[2] += 1
@@ -129,6 +138,7 @@ background_menu_start = True
 while background_menu:
     screen.fill((0, 0, 0))
     screen.blit(background_menu, (0, 0))
+    
     if start_button.draw(screen):
         running = True
         while running:
@@ -159,7 +169,7 @@ while background_menu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_press = pygame.mouse.get_pressed()
                     # Select Turret
-                    if mouse_press[0] and check_enemy_move == False and turret_state == False and base_hp > 0:
+                    if mouse_press[0] and check_enemy_move == False and turret_state == False and base_hp > 0 and wave != 6:
                         # Select Turret 1
                         if mouse_location[0] >= 100 and mouse_location[0] <= 260 and \
                                 mouse_location[1] >= 540 and mouse_location[1] <= 600 and turret_amount[0] > 0:
@@ -202,7 +212,7 @@ while background_menu:
                     # Select Delete
                     if mouse_press[0] and mouse_location[0] >= 755 and \
                         mouse_location[0] <= 785 and mouse_location[1] >= 555 and \
-                            mouse_location[1] <= 585 and check_enemy_move == False and base_hp > 0:
+                            mouse_location[1] <= 585 and check_enemy_move == False and base_hp > 0 and wave != 6:
                         pygame.mouse.set_visible(False)
                         turret_state = False
                         delete_turret = True
@@ -233,19 +243,24 @@ while background_menu:
                     if event.key == pygame.K_SPACE and base_hp > 0:
                         check_enemy_move = True
                         pygame.mouse.set_visible(True)
-                        #"****"
-                    if event.key == pygame.K_1 and check_enemy_move == False and base_hp > 0:
+                    if event.key == pygame.K_1 and check_enemy_move == False and base_hp > 0 and turret_amount[0] > 0 and wave != 6:
                         select = turret_1
+                        turret_type = 0
                         pygame.mouse.set_visible(False)
                         turret_state = True
-                    if event.key == pygame.K_2 and check_enemy_move == False and base_hp > 0:
+                        delete_turret = False
+                    if event.key == pygame.K_2 and check_enemy_move == False and base_hp > 0 and turret_amount[1] > 0 and wave != 6:
                         select = turret_2
+                        turret_type = 1
                         pygame.mouse.set_visible(False)
                         turret_state = True
-                    if event.key == pygame.K_3 and check_enemy_move == False and base_hp > 0:
+                        delete_turret = False
+                    if event.key == pygame.K_3 and check_enemy_move == False and base_hp > 0 and turret_amount[2] > 0 and wave != 6:
                         select = turret_3
+                        turret_type = 2
                         pygame.mouse.set_visible(False)
                         turret_state = True
+                        delete_turret = False
 
             # Select Turret
             if turret_state and check_enemy_move == False:
@@ -319,7 +334,7 @@ while background_menu:
 
             if num_of_enemies == 0:
                 if wave == 0:
-                    for _ in range(5):
+                    for _ in range(3):
                         add_turret(random.randrange(100))
                 else:
                     for _ in range(2):
@@ -328,14 +343,22 @@ while background_menu:
                 print("Turret 2 : %d" %turret_amount[1])
                 print("Turret 3 : %d" %turret_amount[2])
                 wave += 1
-                num_of_enemies = 6
+                num_of_enemies = 6+2*(wave-1) #เติมที่นี้
                 print("Wave : %d" %wave)
                 enemy_born()
                 check_enemy_move = False
+                turret_state = False
+
+            show_font()
+            
             if base_hp <= 0:
                 screen.blit(game_over, (0, 0))
                 if menu_button.draw(screen):
-                    running = False
+                    pygame.quit()
+            if wave == 6 and base_hp > 0:
+                screen.blit(game_over, (0, 0))
+                if menu_button.draw(screen):
+                    pygame.quit()
                     
             pygame.display.update()
     if exit_button.draw(screen):
