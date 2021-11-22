@@ -1,6 +1,8 @@
 import pygame
 import math
 import random
+
+from pygame import display
 import enemy_info
 import btn
 # Intialize The Pygame
@@ -12,16 +14,21 @@ screen = pygame.display.set_mode((800, 600))
 # Background
 background = pygame.image.load('stage/stage01_2.png')
 background_menu = pygame.image.load("game_cover/main_game.png")
+help_menu = pygame.image.load("game_cover/help_menu.png")
 # Title
 pygame.display.set_caption("Galactic Frontier")
 #button
 start_img = pygame.image.load('button/start_b.png').convert_alpha()
 exit_img = pygame.image.load('button/button_e.png').convert_alpha()
 return_img = pygame.image.load('button/button.png').convert_alpha()
+help_img = pygame.image.load("button/button_help.png").convert_alpha()
+back_img = pygame.image.load("button/button_back.png").convert_alpha()
 #create button instances
-start_button = btn.Button(325, 300, start_img, 0.6)
-exit_button = btn.Button(330, 425, exit_img, 0.55)
+start_button = btn.Button(325, 280, start_img, 0.6)
+exit_button = btn.Button(325, 465, exit_img, 0.6)
 menu_button = btn.Button(320, 425, return_img, 1)
+help_button = btn.Button(325, 370, help_img, 0.6)
+back_button = btn.Button(325, 465, back_img, 0.6)
 # Icon
 icon = pygame.image.load('main/Assets/icon.png')
 pygame.display.set_icon(icon)
@@ -99,6 +106,20 @@ def show_font():
     screen.blit(show_turret_1, (215, 557))
     screen.blit(show_turret_2, (435, 557))
     screen.blit(show_turret_3, (660, 558))
+def fort_help():
+    """fort ช่วยเล่น"""
+    help_wave = font.render("press space bar to start wave", True ,(255, 255, 255))
+    help_turret_1 = font.render("press 1 to select yellow turret", True ,(255, 255, 255))
+    help_turret_2 = font.render("press 2 to select purple turret", True ,(255, 255, 255))
+    help_turret_3 = font.render("press 3 to select red turret", True ,(255, 255, 255))
+    help_turret_4 = font.render("press 4 to select delete turret", True ,(255, 255, 255))
+    help_quit = font.render("press Esc to quit game", True ,(255, 255, 255))
+    screen.blit(help_wave, (100, 50))
+    screen.blit(help_turret_1, (100, 100))
+    screen.blit(help_turret_2, (100, 150))
+    screen.blit(help_turret_3, (100, 200))
+    screen.blit(help_turret_4, (100, 250))
+    screen.blit(help_quit, (100, 300))
 
 def enemy_born():
     for i in range(num_of_enemies):
@@ -139,14 +160,27 @@ def add_turret(percent):
     else:
         turret_amount[2] += 1
 
-
+def help_me():
+    """help to play"""
+    background_help = True
+    while background_help:
+        for event in pygame.event.get():
+		    #quit game
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        screen.blit(help_menu, (0, 0))
+        fort_help()
+        if exit_button.draw(screen):
+            background_help = False
+        display.update()
 # Main Game
 running = False
 background_menu_start = True
-while background_menu:
+background_help = False
+background_menu_go = True
+while background_menu_start:
     screen.fill((0, 0, 0))
     screen.blit(background_menu, (0, 0))
-    
     if start_button.draw(screen):
         running = True
         while running:
@@ -375,7 +409,7 @@ while background_menu:
 		#quit game
         if event.type == pygame.QUIT:
             pygame.quit()
-            
-
+    if help_button.draw(screen):
+        help_me()
     pygame.display.update()
     
