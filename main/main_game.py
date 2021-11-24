@@ -108,18 +108,20 @@ def show_font():
     screen.blit(show_turret_3, (660, 558))
 def fort_help():
     """fort ช่วยเล่น"""
-    help_wave = font.render("press space bar to start wave", True ,(255, 255, 255))
-    help_turret_1 = font.render("press 1 to select yellow turret", True ,(255, 255, 255))
-    help_turret_2 = font.render("press 2 to select purple turret", True ,(255, 255, 255))
-    help_turret_3 = font.render("press 3 to select red turret", True ,(255, 255, 255))
-    help_turret_4 = font.render("press 4 to select delete turret", True ,(255, 255, 255))
-    help_quit = font.render("press Esc to quit game", True ,(255, 255, 255))
+    help_wave = font.render("Press space bar to start wave", True ,(255, 255, 255))
+    help_deselect = font.render("Press right mouse button to deselect", True ,(255, 255, 255))
+    help_turret_1 = font.render("Press 1 to select yellow turret", True ,(255, 255, 255))
+    help_turret_2 = font.render("Press 2 to select purple turret", True ,(255, 255, 255))
+    help_turret_3 = font.render("Press 3 to select red turret", True ,(255, 255, 255))
+    help_turret_4 = font.render("Press 4 to select delete turret", True ,(255, 255, 255))
+    help_quit = font.render("Press Esc to quit game", True ,(255, 255, 255))
     screen.blit(help_wave, (100, 50))
-    screen.blit(help_turret_1, (100, 100))
-    screen.blit(help_turret_2, (100, 150))
-    screen.blit(help_turret_3, (100, 200))
-    screen.blit(help_turret_4, (100, 250))
-    screen.blit(help_quit, (100, 300))
+    screen.blit(help_deselect, (100, 100))
+    screen.blit(help_turret_1, (100, 150))
+    screen.blit(help_turret_2, (100, 200))
+    screen.blit(help_turret_3, (100, 250))
+    screen.blit(help_turret_4, (100, 300))
+    screen.blit(help_quit, (100, 350))
 
 def enemy_born():
     random_enemy = []
@@ -307,6 +309,10 @@ while background_menu_start:
                         pygame.mouse.set_visible(False)
                         turret_state = True
                         delete_turret = False
+                    if event.key == pygame.K_4 and check_enemy_move == False and base_hp > 0 and wave != 6:
+                        pygame.mouse.set_visible(False)
+                        turret_state = False
+                        delete_turret = True
 
             # Select Turret
             if turret_state and check_enemy_move == False:
@@ -390,6 +396,7 @@ while background_menu_start:
                 enemy_born()
                 check_enemy_move = False
                 turret_state = False
+                delete_turret = False
 
             show_font()
             
