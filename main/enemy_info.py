@@ -2,13 +2,13 @@ import pygame
 
 class Enemy():
 	def main(num, enemy_type):
-		if enemy_type == 1:
+		if enemy_type == 2:
 			enemyImg = (pygame.image.load('main/Assets/enemy_normal.png'))
 			enemyX = (-100)-num*75
 			enemyY = 240
 			enemyX_change,enemyY_change = 2,2
 			enemy_health,enemy_state = (150),(False)
-		elif enemy_type == 2:
+		elif enemy_type == 1:
 			enemyImg = (pygame.image.load('main/Assets/enemy_fast.png'))
 			enemyX = (-100)-num*75
 			enemyY = 240

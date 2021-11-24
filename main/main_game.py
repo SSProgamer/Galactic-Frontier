@@ -122,9 +122,13 @@ def fort_help():
     screen.blit(help_quit, (100, 300))
 
 def enemy_born():
+    random_enemy = []
+    for i in range(num_of_enemies):
+        random_enemy.append(random.randrange(1, 4))
+    random_enemy.sort()
     for i in range(num_of_enemies):
         ans = (enemy_info.Enemy)
-        ans = ans.main(i, random.randrange(1, 4))
+        ans = ans.main(i, random_enemy[i])
         enemyImg.append(ans[6])
         enemyX.append(ans[0])
         enemyY.append(ans[1])
