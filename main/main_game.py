@@ -36,10 +36,15 @@ pygame.display.set_icon(icon)
 #music
 bgm_vol = 0.1
 sfx_vol = 0.1
-#pygame.mixer.music.load('main/Assets/Memory.mp3')
-#pygame.mixer.music.play(-1)
+# pygame.mixer.music.load('main/Assets/Sound/Memory.mp3')
+pygame.mixer.music.load('main/Assets/Sound/markart.mp3')
+# pygame.mixer.music.load('main/Assets/Sound/MarioKart.mp3')
+pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(bgm_vol)
-#hit = pygame.mixer.Sound('main/Assets/hit.mp3')
+
+hit = pygame.mixer.Sound('main/Assets/Sound/360917__projectsu012__shoot1.wav')
+enemy_ded = pygame.mixer.Sound('main/Assets/Sound/334266__projectsu012__short-explosion-1.wav')
+
 
 # Game Assets
 game_over = pygame.image.load('main/Assets/git_gud.png')
@@ -338,6 +343,8 @@ while background_menu_start:
                         del enemy_health[i]
                         del enemy_state[i]
                         num_of_enemies -= 1
+                        enemy_ded.set_volume(sfx_vol)
+                        enemy_ded.play()
                         break
 
             # Turret Work
@@ -356,6 +363,8 @@ while background_menu_start:
                 all_turret(i, all_turretlo[i])        
                 if laser_cool[i] > 0:
                     screen.blit(turret_fire[i], all_turretlo[i])
+                    hit.set_volume(sfx_vol)
+                    hit.play()  
                     laser_cool[i] -= 1
 
             # Select Delete
