@@ -36,9 +36,7 @@ pygame.display.set_icon(icon)
 #music
 bgm_vol = 0.1
 sfx_vol = 0.1
-# pygame.mixer.music.load('main/Assets/Sound/Memory.mp3')
 pygame.mixer.music.load('main/Assets/Sound/markart.mp3')
-# pygame.mixer.music.load('main/Assets/Sound/MarioKart.mp3')
 pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(bgm_vol)
 
@@ -105,12 +103,13 @@ def show_font():
     show_turret_1 = font.render("%d"%turret_amount[0], True ,(255, 255, 255))
     show_turret_2 = font.render("%d"%turret_amount[1], True ,(255, 255, 255))
     show_turret_3 = font.render("%d"%turret_amount[2], True ,(255, 255, 255))
-    screen.blit(show_wave, (10, 10)) #กำหนดต้ำแหน่ง
+    screen.blit(show_wave, (10, 10)) #กำหนดตำแหน่ง
     screen.blit(show_enemy, (335, 10))
     screen.blit(show_hp, (700, 10))
     screen.blit(show_turret_1, (215, 557))
     screen.blit(show_turret_2, (435, 557))
     screen.blit(show_turret_3, (660, 558))
+
 def fort_help():
     """fort ช่วยเล่น"""
     help_wave = font.render("Press space bar to start wave", True ,(255, 255, 255))
