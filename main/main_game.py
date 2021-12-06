@@ -45,7 +45,8 @@ enemy_ded = pygame.mixer.Sound('main/Assets/Sound/334266__projectsu012__short-ex
 
 
 # Game Assets
-game_over = pygame.image.load('main/Assets/git_gud.png')
+game_over = pygame.image.load('main/Assets/GAMEOVER.png')
+congrats = pygame.image.load('main/Assets/WINNER.png')
 delete = pygame.image.load('main/Assets/delete.png')
 delete_turret = False
 ban_location = [[10, 240], [70, 240], [130, 240], [130, 300], [130, 360], [190, 360],
@@ -413,7 +414,7 @@ while background_menu_start:
                 if menu_button.draw(screen):
                     pygame.quit()
             if wave == 6 and base_hp > 0:
-                screen.blit(game_over, (0, 0))
+                screen.blit(congrats, (0, 0))
                 if menu_button.draw(screen):
                     pygame.quit()
                     
