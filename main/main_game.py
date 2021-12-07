@@ -1,10 +1,9 @@
 import pygame
-import math
 import random
-
 from pygame import display
 import enemy_info
 import btn
+
 # Intialize The Pygame
 pygame.init()
 
@@ -17,13 +16,13 @@ background_menu = pygame.image.load("game_cover/main_game.png")
 help_menu = pygame.image.load("game_cover/help_menu.png")
 # Title
 pygame.display.set_caption("Galactic Frontier")
-#button
+# button
 start_img = pygame.image.load('button/start_b.png').convert_alpha()
 exit_img = pygame.image.load('button/button_e.png').convert_alpha()
 return_img = pygame.image.load('button/button.png').convert_alpha()
 help_img = pygame.image.load("button/button_help.png").convert_alpha()
 back_img = pygame.image.load("button/button_back.png").convert_alpha()
-#create button instances
+# create button instances
 start_button = btn.Button(325, 280, start_img, 0.6)
 exit_button = btn.Button(325, 465, exit_img, 0.6)
 menu_button = btn.Button(320, 425, return_img, 1)
@@ -33,7 +32,7 @@ back_button = btn.Button(325, 465, back_img, 0.6)
 icon = pygame.image.load('main/Assets/icon.png')
 pygame.display.set_icon(icon)
 
-#music
+# music
 bgm_vol = 0.1
 sfx_vol = 0.1
 pygame.mixer.music.load('main/Assets/Sound/markart.mp3')
@@ -41,7 +40,8 @@ pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(bgm_vol)
 
 hit = pygame.mixer.Sound('main/Assets/Sound/360917__projectsu012__shoot1.wav')
-enemy_ded = pygame.mixer.Sound('main/Assets/Sound/334266__projectsu012__short-explosion-1.wav')
+enemy_ded = pygame.mixer.Sound(
+    'main/Assets/Sound/334266__projectsu012__short-explosion-1.wav')
 
 
 # Game Assets
@@ -70,7 +70,7 @@ all_turret_type = []
 all_turret_rect = []
 turret_fire = []
 laser_cool = []
-type_range = [200, 100, 400] #range of turrets
+type_range = [200, 100, 400]  # range of turrets
 type_cool_down = [50, 50, 100]
 type_damage = [25, 35, 50]
 num_of_turret = 0
@@ -97,29 +97,38 @@ wave = 0
 
 font = pygame.font.Font("main/fort/Minecraft.ttf", 30)
 
+
 def show_font():
-    show_wave = font.render("WAVE : %d"%wave, True ,(255, 255, 255))
-    show_enemy = font.render("ENEMY : %d"%num_of_enemies, True ,(255, 255, 255))
-    show_hp = font.render("HP : %d"%base_hp, True ,(255, 255, 255))
-    show_turret_1 = font.render("%d"%turret_amount[0], True ,(255, 255, 255))
-    show_turret_2 = font.render("%d"%turret_amount[1], True ,(255, 255, 255))
-    show_turret_3 = font.render("%d"%turret_amount[2], True ,(255, 255, 255))
-    screen.blit(show_wave, (10, 10)) #กำหนดตำแหน่ง
+    show_wave = font.render("WAVE : %d" % wave, True, (255, 255, 255))
+    show_enemy = font.render("ENEMY : %d" %
+                             num_of_enemies, True, (255, 255, 255))
+    show_hp = font.render("HP : %d" % base_hp, True, (255, 255, 255))
+    show_turret_1 = font.render("%d" % turret_amount[0], True, (255, 255, 255))
+    show_turret_2 = font.render("%d" % turret_amount[1], True, (255, 255, 255))
+    show_turret_3 = font.render("%d" % turret_amount[2], True, (255, 255, 255))
+    screen.blit(show_wave, (10, 10))  # กำหนดตำแหน่ง
     screen.blit(show_enemy, (335, 10))
     screen.blit(show_hp, (700, 10))
     screen.blit(show_turret_1, (215, 557))
     screen.blit(show_turret_2, (435, 557))
     screen.blit(show_turret_3, (660, 558))
 
+
 def fort_help():
     """fort ช่วยเล่น"""
-    help_wave = font.render("Press space bar to start wave", True ,(255, 255, 255))
-    help_deselect = font.render("Press right mouse button to deselect", True ,(255, 255, 255))
-    help_turret_1 = font.render("Press 1 to select yellow turret", True ,(255, 255, 255))
-    help_turret_2 = font.render("Press 2 to select purple turret", True ,(255, 255, 255))
-    help_turret_3 = font.render("Press 3 to select red turret", True ,(255, 255, 255))
-    help_turret_4 = font.render("Press 4 to select delete turret", True ,(255, 255, 255))
-    help_quit = font.render("Press Esc to quit game", True ,(255, 255, 255))
+    help_wave = font.render(
+        "Press space bar to start wave", True, (255, 255, 255))
+    help_deselect = font.render(
+        "Press right mouse button to deselect", True, (255, 255, 255))
+    help_turret_1 = font.render(
+        "Press 1 to select yellow turret", True, (255, 255, 255))
+    help_turret_2 = font.render(
+        "Press 2 to select purple turret", True, (255, 255, 255))
+    help_turret_3 = font.render(
+        "Press 3 to select red turret", True, (255, 255, 255))
+    help_turret_4 = font.render(
+        "Press 4 to select delete turret", True, (255, 255, 255))
+    help_quit = font.render("Press Esc to quit game", True, (255, 255, 255))
     screen.blit(help_wave, (100, 50))
     screen.blit(help_deselect, (100, 100))
     screen.blit(help_turret_1, (100, 150))
@@ -127,6 +136,7 @@ def fort_help():
     screen.blit(help_turret_3, (100, 250))
     screen.blit(help_turret_4, (100, 300))
     screen.blit(help_quit, (100, 350))
+
 
 def enemy_born():
     random_enemy = []
@@ -143,12 +153,11 @@ def enemy_born():
         enemyY_change.append(ans[3])
         enemy_health.append(ans[4])
         enemy_state.append(ans[5])
-      
+
 
 def player(select, x, y, radius):
-    pygame.draw.circle(screen, (255,255,255), (x+30, y+30), radius, 5)
+    pygame.draw.circle(screen, (255, 255, 255), (x+30, y+30), radius, 5)
     screen.blit(select, (x, y))
-    
 
 
 def all_turret(i, turret_rect):
@@ -162,6 +171,7 @@ def enemy(x, y, i):
 def select_delete(image, x, y):
     screen.blit(image, (x, y))
 
+
 def add_turret(percent):
     global turret_amount
     if percent <= 49:
@@ -171,12 +181,13 @@ def add_turret(percent):
     else:
         turret_amount[2] += 1
 
+
 def help_me():
     """help to play"""
     background_help = True
     while background_help:
         for event in pygame.event.get():
-		    #quit game
+            # quit game
             if event.type == pygame.QUIT:
                 pygame.quit()
         screen.blit(help_menu, (0, 0))
@@ -184,6 +195,8 @@ def help_me():
         if exit_button.draw(screen):
             background_help = False
         display.update()
+
+
 # Main Game
 running = False
 background_menu_start = True
@@ -203,7 +216,7 @@ while background_menu_start:
             screen.blit(slot_2, (320, 540))
             screen.blit(slot_3, (540, 540))
             screen.blit(delete, (755, 555))
-            
+
             # Get Mouse Location
             mouse_location = pygame.mouse.get_pos()
             fix_mouse_lo = [(mouse_location[0]//60)*(60)+10,
@@ -328,10 +341,11 @@ while background_menu_start:
                         screen.blit(turret_sec_lo_cannot,
                                     (fix_mouse_lo[0], fix_mouse_lo[1]))
                     else:
-                        screen.blit(turret_sec_lo, (fix_mouse_lo[0], fix_mouse_lo[1]))
+                        screen.blit(turret_sec_lo,
+                                    (fix_mouse_lo[0], fix_mouse_lo[1]))
                 player(select, playerX, playerY, type_range[turret_type])
 
-            # Remove Dead Enemy    
+            # Remove Dead Enemy
             while True in enemy_state:
                 for i in range(num_of_enemies):
                     if enemy_state[i]:
@@ -343,8 +357,9 @@ while background_menu_start:
                         del enemy_health[i]
                         del enemy_state[i]
                         num_of_enemies -= 1
-                        enemy_ded.set_volume(sfx_vol)
-                        enemy_ded.play()
+                        if base_hp > 0:
+                            enemy_ded.set_volume(sfx_vol)
+                            enemy_ded.play()
                         break
 
             # Turret Work
@@ -356,20 +371,22 @@ while background_menu_start:
                 for j in range(num_of_enemies):
                     if ((enemyX[j]+30)-(all_turretlo[i][0]+30))**2 + \
                         ((enemyY[j]+30)-(all_turretlo[i][1]+30))**2 <= type_range[all_turret_type[i]]**2 and \
-                        all_turretCool[i] == type_cool_down[all_turret_type[i]] and enemyX[j] > -30:
+                            all_turretCool[i] == type_cool_down[all_turret_type[i]] and enemyX[j] > -30:
                         enemy_health[j] -= type_damage[all_turret_type[i]]
                         all_turretCool[i] = 0
                         laser_cool[i] = 10
-                all_turret(i, all_turretlo[i])        
+                all_turret(i, all_turretlo[i])
                 if laser_cool[i] > 0:
                     screen.blit(turret_fire[i], all_turretlo[i])
-                    hit.set_volume(sfx_vol)
-                    hit.play()  
+                    if base_hp > 0:
+                        hit.set_volume(sfx_vol)
+                        hit.play()
                     laser_cool[i] -= 1
 
             # Select Delete
             if delete_turret and check_enemy_move == False:
-                select_delete(delete, mouse_location[0]-15, mouse_location[1]-15)
+                select_delete(
+                    delete, mouse_location[0]-15, mouse_location[1]-15)
 
             # Enemy
             for i in range(num_of_enemies):
@@ -389,7 +406,6 @@ while background_menu_start:
                 if enemy_health[i] <= 0 or enemyX[i] > 800:
                     if enemyX[i] > 800:
                         base_hp -= 1
-                        print(base_hp)
                     enemy_state[i] = True
                 enemy(enemyX[i], enemyY[i], i)
 
@@ -401,14 +417,14 @@ while background_menu_start:
                     for _ in range(2):
                         add_turret(random.randrange(100))
                 wave += 1
-                num_of_enemies = 6+2*(wave-1) #เติมที่นี้
+                num_of_enemies = 6+2*(wave-1)  # เติมที่นี้
                 enemy_born()
                 check_enemy_move = False
                 turret_state = False
                 delete_turret = False
 
             show_font()
-            
+
             if base_hp <= 0:
                 screen.blit(game_over, (0, 0))
                 if menu_button.draw(screen):
@@ -417,19 +433,18 @@ while background_menu_start:
                 screen.blit(congrats, (0, 0))
                 if menu_button.draw(screen):
                     pygame.quit()
-                    
+
             pygame.display.update()
     if exit_button.draw(screen):
         pygame.quit()
         background_menu_start = False
         running = False
 
-	#event handler
+        # event handler
     for event in pygame.event.get():
-		#quit game
+        # quit game
         if event.type == pygame.QUIT:
             pygame.quit()
     if help_button.draw(screen):
         help_me()
     pygame.display.update()
-    
