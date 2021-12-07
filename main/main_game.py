@@ -25,7 +25,6 @@ back_img = pygame.image.load("button/button_back.png").convert_alpha()
 # create button instances
 start_button = btn.Button(325, 280, start_img, 0.6)
 exit_button = btn.Button(325, 465, exit_img, 0.6)
-menu_button = btn.Button(320, 425, return_img, 1)
 help_button = btn.Button(325, 370, help_img, 0.6)
 back_button = btn.Button(325, 465, back_img, 0.6)
 # Icon
@@ -424,14 +423,14 @@ while background_menu_start:
                 delete_turret = False
 
             show_font()
-
+            exit_button = btn.Button(325, 400, exit_img, 0.6)
             if base_hp <= 0:
                 screen.blit(game_over, (0, 0))
-                if menu_button.draw(screen):
+                if exit_button.draw(screen):
                     pygame.quit()
             if wave == 6 and base_hp > 0:
                 screen.blit(congrats, (0, 0))
-                if menu_button.draw(screen):
+                if exit_button.draw(screen):
                     pygame.quit()
 
             pygame.display.update()
