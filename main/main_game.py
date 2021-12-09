@@ -189,6 +189,9 @@ def help_me():
             # quit game
             if event.type == pygame.QUIT:
                 pygame.quit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
         screen.blit(help_menu, (0, 0))
         fort_help()
         if exit_button.draw(screen):
@@ -444,6 +447,9 @@ while background_menu_start:
         # quit game
         if event.type == pygame.QUIT:
             pygame.quit()
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_ESCAPE:
+                pygame.quit()
     if help_button.draw(screen):
         help_me()
     pygame.display.update()
